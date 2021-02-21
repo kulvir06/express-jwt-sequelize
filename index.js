@@ -1,5 +1,22 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import jwt from 'jsonwebtoken';
+
+//import passport and passport-jwt modules
+import passport from 'passport';
+import passportJWT from 'passport-jwt';
+
+//ExtractJwt to help extract the token
+let ExtractJwt = passportJWT.ExtractJwt;
+
+//JwtStrategy which is the strategy for authentication
+let JwtStrategy = passportJWT.Strategy;
+let jwtOptions = {};
+
+jwtOptions.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
+jwtOptions.secretOrKey = 'wowwow';
+
+//lets create our strategy for web token
 
 import db from './database';
 import helperMethods from './helper-methods';
