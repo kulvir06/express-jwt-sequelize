@@ -1,4 +1,5 @@
 import Sequelize from 'sequelize';
+import User from './user';
 
 //initialize an instance of Sequelize
 const sequelize = new Sequelize( 'authPrac', 'root', 'password', {
@@ -15,5 +16,7 @@ const db = {};
 
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
+
+db.User = User(sequelize, Sequelize);
 
 module.exports = db;
