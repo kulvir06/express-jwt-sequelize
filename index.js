@@ -91,6 +91,10 @@ app.post('/login', async (req, res, next) => {
     }
 });
 
+//protected route
+app.get('/protected', passport.authenticate('jwt', { session: false }), (req,res) => {
+   res.json({ msg: 'You are seeing this because you are authorized' }); 
+});
 
 
 //start the app
