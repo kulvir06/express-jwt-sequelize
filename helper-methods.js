@@ -10,7 +10,7 @@ class helper{
     }
 
     async getUser(obj) {
-        return await User.findOne({ where: obj });
+        return await db.User.findOne({ where: obj });
     }
 }
 

@@ -69,8 +69,27 @@ app.post('/register', (req, res, next) => {
      .then(user => res.json({ user, msg: 'account created successfully' }));
 });
 
+//login route
 
-
+app.post('/login', async (req, res, next) => {
+    const obj = new helperMethods();
+    const { name, password } = req.body;
+    if (name && password){
+        //we get the user with the name and save the resolved promise returned
+        let user = await obj.getUser({ name });
+        if(!user) {
+            res.status(401).json({ msg: 'No such user found', user });
+        }
+        if(user.password===password){
+            //from now on we will identify the user by the id and the id is the only personalized value that goes into our token
+            let payload = { id: user.id };
+            let token = jwt.sign(payload, jwtOptions.secretOrKey);
+            res.json({ msg: 'ok', token: token });
+        } else {
+            res.status(401).json({ msg: 'Password is incorrect' });
+        }
+    }
+});
 
 
 
