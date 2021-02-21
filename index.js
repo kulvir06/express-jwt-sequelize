@@ -2,6 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 
 import db from './database';
+import helperMethods from './helper-methods';
 
 const app = express();
 
@@ -16,10 +17,32 @@ const exe  = async() => {
 }
 exe();
 
+
+
 //add a basic route
 app.get('/', (req, res) => {
     res.json({ message: 'Express is up!' });
 });
+
+//get all users
+app.get('/users', (req, res) => {
+    const obj = new helperMethods();
+    obj.getAllUsers().then(user => res.json(user));    
+});
+
+//register route
+app.post('/register', (req, res, next) => {
+    const obj = new helperMethods();
+    const { name, password } = req.body;
+
+    obj.createUser({ name, password })
+     .then(user => res.json({ user, msg: 'account created successfully' }));
+});
+
+
+
+
+
 
 //start the app
 app.listen(3000, () => {
