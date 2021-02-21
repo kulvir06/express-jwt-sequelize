@@ -1,6 +1,8 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import jwt from 'jsonwebtoken';
+import db from './database';
+import helperMethods from './helper-methods';
 
 //import passport and passport-jwt modules
 import passport from 'passport';
@@ -17,9 +19,18 @@ jwtOptions.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
 jwtOptions.secretOrKey = 'wowwow';
 
 //lets create our strategy for web token
-
-import db from './database';
-import helperMethods from './helper-methods';
+let strategy = new JwtStrategy(jwtOptions, (jwt_payload, next) => {
+    const obj = new helperMethods();
+    console.log('payload recieved', jwt_payload);
+    let user = obj.getUser({ id: jwt_payload.id });
+    if (user) {
+        next(null, user);
+    } else {
+        next(null, false);
+    }
+});
+//use the strategy
+passport.use(strategy);
 
 const app = express();
 
@@ -27,6 +38,8 @@ const app = express();
 app.use(bodyParser.json());
 //parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
+//initialise passport
+app.use(passport.initialize());
 
 //connecting to database
 const exe  = async() => {
